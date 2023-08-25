@@ -18,6 +18,7 @@ const end_timestamp = 1672444800
 let stocks_price = [];
 export const stocks = [
   'BBCA',
+  'BBRI',
 ];
 
 for (let i = 0; i < stocks.length; i++) {
@@ -42,10 +43,35 @@ for (let i = 0; i < stocks.length; i++) {
   });
 
   const result = a.filter((element) => element!=null);
-console.log(result)
 
+  let highest = 0;
+  let lowest = 0;
+  let year_data = "";
+  let arraya = [];
 
+  result.forEach((data) => {
+    if (year_data != data.date) {
+      if (year_data != "") {
+        arraya.push({
+          'year': year_data, 
+          'highest': highest, 
+          'lowest': lowest,
+          'stocks': stocks[i],
+        })
+      } 
+    }
+
+    highest = data.highest
+    lowest = data.lowest
+    year_data = data.date
+
+  })
+
+  // stocks_price = [...stocks_price, {[stocks[i]] : arraya}]
+  stocks_price = [...stocks_price, arraya]
 }
+
+console.log(stocks_price)
 
 
 await browser.close()
