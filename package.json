@@ -1,0 +1,15 @@
+{
+  "name": "stocks-price-scraping",
+  "version": "1.0.0",
+  "description": "Stocks prices scraping",
+  "main": "scraper.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "raptorz12",
+  "license": "ISC",
+  "dependencies": {
+    "puppeteer": "^21.1.0"
+  }
+}
