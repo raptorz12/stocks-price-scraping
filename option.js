@@ -1,8 +1,9 @@
+//List of stocks abbreviation you want to get data from
 export const stocks = [
   'BBCA',
-  'BBNI',
-  'BMRI',
+  'UNVR',
 ];
 
-export const start_timestamp = 1262304000
-export const end_timestamp = 1672444800
+//Date in timestamp format
+export const startTimestamp = 1262304000 //Jan 1, 2010
+export const endTimestamp = 1672444800 //Dec 31, 2022
