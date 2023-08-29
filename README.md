@@ -177,3 +177,4 @@ Result in `stocks_price.json`
 - Github : [raptorz12](https://github.com/raptorz12)
 - LinkedIn : [Jefry Antonius Karlia](https://linkedin.com/in/jefry-antonius-karlia)
 - Medium : [@raptorz12](https://medium.com/@raptorz12)
+- Twitter : [@jefry_antonius](https://twitter.com/jefry_antonius)

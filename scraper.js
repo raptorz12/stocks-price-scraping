@@ -24,15 +24,15 @@ const getStocksPrice = async () => {
   for (let i = 0; i < stocks.length; i++) {
     await page.goto(`https://finance.yahoo.com/quote/${stocks[i]}.JK/history?period1=${startTimestamp}&period2=${endTimestamp}&interval=1mo`, {timeout: 0, waitUntil: "networkidle2"});
   
-    await scrollDown(page)
+    await scrollDown(page);
   
     //Get stocks price data each month 
     const stocksMonthlyData = await page.$$eval('table > tbody > tr', (el) => {
       return el.map((el) => {
-        if (el.querySelector('td:nth-child(3)') !== null) {
-          let date = el.querySelector('td:nth-child(1) > span').textContent
-          let newDate = new Date(date)
-          const year = newDate.getFullYear()
+        if ((el.querySelector('td:nth-child(3)') !== null) && el.querySelector('td:nth-child(4)') !== null) {
+          let date = el.querySelector('td:nth-child(1) > span').textContent;
+          let newDate = new Date(date);
+          const year = newDate.getFullYear();
   
           return {
             "date" : year,
@@ -40,7 +40,7 @@ const getStocksPrice = async () => {
             "lowest" : el.querySelector('td:nth-child(4) > span').textContent,
           }
         }
-      })
+      });
     });
   
     //Remove null element in array
@@ -53,8 +53,8 @@ const getStocksPrice = async () => {
   
     //Compare highest and lowest stocks data in a year
     result.forEach((data) => {
-      data.highest = data.highest.replace(/,/g, '')
-      data.lowest = data.lowest.replace(/,/g, '')
+      data.highest = data.highest.replace(/,/g, '');
+      data.lowest = data.lowest.replace(/,/g, '');
 
       if (year_data != data.date) {
         if (year_data != "") {
@@ -62,30 +62,30 @@ const getStocksPrice = async () => {
             "year": year_data, 
             "highest": highest, 
             "lowest": lowest,
-          })
+          });
         }
 
-        highest = parseInt(data.highest)
-        lowest = parseInt(data.lowest)
+        highest = parseInt(data.highest);
+        lowest = parseInt(data.lowest);
       } else {
         if (highest < parseInt(data.highest)) {
-          highest = parseInt(data.highest)
+          highest = parseInt(data.highest);
         }
 
         if (lowest==0 || lowest > parseInt(data.lowest)) {
-          lowest = parseInt(data.lowest)
+          lowest = parseInt(data.lowest);
         }
       }
-      year_data = data.date
-    })
+      year_data = data.date;
+    });
   
     stocksData.push({
       "year": year_data, 
       "highest": highest, 
       "lowest": lowest,
-    })
+    });
 
-    stocksPrice = [...stocksPrice, {"name": stocks[i], "data" : stocksData}]
+    stocksPrice = [...stocksPrice, {"name": stocks[i], "data" : stocksData}];
   }
   
   //Close browser
@@ -94,4 +94,4 @@ const getStocksPrice = async () => {
   return stocksPrice;
 }
 
-export let allStocksData = await getStocksPrice()
+export let allStocksData = await getStocksPrice();
