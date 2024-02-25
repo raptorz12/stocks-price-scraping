@@ -22,18 +22,19 @@ const formatData = (stocksData) => {
               'year': stocks.year,
               'highest': stocks.highest,
               'lowest': stocks.lowest,
+              'close': stocks.close,
           });
       });
   });
 
-  return formattedData
+  return formattedData;
 }
 
 //Call the scraper to get all stocks data and save it into XLSX file
 const workbook = new excelJS.Workbook();
 const worksheet = workbook.addWorksheet('Stocks');
 
-worksheet.addRow(['Stocks', 'Year', 'Highest', 'Lowest']);
+worksheet.addRow(['Stocks', 'Year', 'Highest', 'Lowest', 'Close']);
 formatData(allStocksData).forEach(data => {
     const stocks = Object.values(data);
     worksheet.addRow(stocks);
@@ -44,5 +45,5 @@ workbook.xlsx.writeFile('./stocks_price.xlsx')
         console.log(`Stocks data written successfully in XLSX.`);
     })
     .catch(err => {
-        console.err(err);
+        console.error(err);
     });

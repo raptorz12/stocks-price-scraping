@@ -38,7 +38,8 @@ const getStocksPrice = async () => {
             "date" : year,
             "highest" : el.querySelector('td:nth-child(3) > span').textContent,
             "lowest" : el.querySelector('td:nth-child(4) > span').textContent,
-          }
+            "close" : el.querySelector('td:nth-child(5) > span').textContent,
+          };
         }
       });
     });
@@ -48,6 +49,7 @@ const getStocksPrice = async () => {
   
     let highest = 0;
     let lowest = 0;
+    let close = 0;
     let year_data = "";
     let stocksData = [];
   
@@ -55,6 +57,7 @@ const getStocksPrice = async () => {
     result.forEach((data) => {
       data.highest = data.highest.replace(/,/g, '');
       data.lowest = data.lowest.replace(/,/g, '');
+      data.close = data.close.replace(/,/g, '');
 
       if (year_data != data.date) {
         if (year_data != "") {
@@ -62,11 +65,13 @@ const getStocksPrice = async () => {
             "year": year_data, 
             "highest": highest, 
             "lowest": lowest,
+            "close": close,
           });
         }
 
         highest = parseInt(data.highest);
         lowest = parseInt(data.lowest);
+        close = parseInt(data.close);
       } else {
         if (highest < parseInt(data.highest)) {
           highest = parseInt(data.highest);
@@ -80,9 +85,10 @@ const getStocksPrice = async () => {
     });
   
     stocksData.push({
-      "year": year_data, 
-      "highest": highest, 
+      "year": year_data,
+      "highest": highest,
       "lowest": lowest,
+      "close": close,
     });
 
     stocksPrice = [...stocksPrice, {"name": stocks[i], "data" : stocksData}];
