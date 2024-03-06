@@ -14,7 +14,7 @@ const getStocksPrice = async () => {
 
   //Launch browser
   const browser = await puppeteer.launch({
-    headless: 'new',
+    headless: false,
     defaultViewport: false,
   });
 
@@ -29,18 +29,20 @@ const getStocksPrice = async () => {
     //Get stocks price data each month 
     const stocksMonthlyData = await page.$$eval('table > tbody > tr', (el) => {
       return el.map((el) => {
-        if ((el.querySelector('td:nth-child(3)') !== null) && el.querySelector('td:nth-child(4)') !== null) {
+        // if ((el.querySelector('td:nth-child(3)') !== null) && el.querySelector('td:nth-child(4)') !== null) {
           let date = el.querySelector('td:nth-child(1) > span').textContent;
           let newDate = new Date(date);
           const year = newDate.getFullYear();
   
+          //Check if some data in table is null
           return {
             "date" : year,
-            "highest" : el.querySelector('td:nth-child(3) > span').textContent,
-            "lowest" : el.querySelector('td:nth-child(4) > span').textContent,
-            "close" : el.querySelector('td:nth-child(5) > span').textContent,
+            "highest" : el.querySelector('td:nth-child(3)') !== null ? el.querySelector('td:nth-child(3) > span').textContent : '0',
+            "lowest" : el.querySelector('td:nth-child(4)') !== null ? el.querySelector('td:nth-child(4) > span').textContent : '0',
+            "close" : el.querySelector('td:nth-child(5)') !== null ? el.querySelector('td:nth-child(5) > span').textContent : '0',
+            "dividend" : el.querySelector('td:nth-child(2) > span').textContent==='Dividend' ? el.querySelector('td:nth-child(2) > strong').textContent : '0',
           };
-        }
+        // }
       });
     });
   
@@ -50,10 +52,11 @@ const getStocksPrice = async () => {
     let highest = 0;
     let lowest = 0;
     let close = 0;
+    let dividend = 0;
     let year_data = "";
     let stocksData = [];
   
-    //Compare highest and lowest stocks data in a year
+    //Compare highest and lowest stocks data and sum dividend in a year
     result.forEach((data) => {
       data.highest = data.highest.replace(/,/g, '');
       data.lowest = data.lowest.replace(/,/g, '');
@@ -66,12 +69,17 @@ const getStocksPrice = async () => {
             "highest": highest, 
             "lowest": lowest,
             "close": close,
+            "dividend": dividend,
           });
+
+          //Reset the dividend each year
+          dividend = 0
         }
 
         highest = parseInt(data.highest);
         lowest = parseInt(data.lowest);
         close = parseInt(data.close);
+        dividend += parseFloat(data.dividend);
       } else {
         if (highest < parseInt(data.highest)) {
           highest = parseInt(data.highest);
@@ -80,6 +88,8 @@ const getStocksPrice = async () => {
         if (lowest==0 || lowest > parseInt(data.lowest)) {
           lowest = parseInt(data.lowest);
         }
+        
+        dividend += parseFloat(data.dividend);
       }
       year_data = data.date;
     });
@@ -89,6 +99,7 @@ const getStocksPrice = async () => {
       "highest": highest,
       "lowest": lowest,
       "close": close,
+      "dividend": dividend,
     });
 
     stocksPrice = [...stocksPrice, {"name": stocks[i], "data" : stocksData}];
