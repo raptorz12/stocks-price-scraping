@@ -14,7 +14,7 @@ const getStocksPrice = async () => {
 
   //Launch browser
   const browser = await puppeteer.launch({
-    headless: false,
+    headless: 'new',
     defaultViewport: false,
   });
 
@@ -61,7 +61,7 @@ const getStocksPrice = async () => {
       data.highest = data.highest.replace(/,/g, '');
       data.lowest = data.lowest.replace(/,/g, '');
       data.close = data.close.replace(/,/g, '');
-
+      
       if (year_data != data.date) {
         if (year_data != "") {
           stocksData.push({
@@ -76,16 +76,18 @@ const getStocksPrice = async () => {
           dividend = 0
         }
 
-        highest = parseInt(data.highest);
-        lowest = parseInt(data.lowest);
-        close = parseInt(data.close);
+        if (data.dividend==0) {
+          highest = parseInt(data.highest);
+          lowest = parseInt(data.lowest);
+          close = parseInt(data.close);
+        }
         dividend += parseFloat(data.dividend);
       } else {
         if (highest < parseInt(data.highest)) {
           highest = parseInt(data.highest);
         }
 
-        if (lowest==0 || lowest > parseInt(data.lowest)) {
+        if ((lowest==0 || lowest > parseInt(data.lowest)) && data.lowest!=0) {
           lowest = parseInt(data.lowest);
         }
         
