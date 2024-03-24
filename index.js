@@ -23,6 +23,7 @@ const formatData = (stocksData) => {
               'highest': stocks.highest,
               'lowest': stocks.lowest,
               'close': stocks.close,
+              'dividend': stocks.dividend,
           });
       });
   });
@@ -34,7 +35,7 @@ const formatData = (stocksData) => {
 const workbook = new excelJS.Workbook();
 const worksheet = workbook.addWorksheet('Stocks');
 
-worksheet.addRow(['Stocks', 'Year', 'Highest', 'Lowest', 'Close']);
+worksheet.addRow(['Stocks', 'Year', 'Highest', 'Lowest', 'Close', 'Dividend']);
 formatData(allStocksData).forEach(data => {
     const stocks = Object.values(data);
     worksheet.addRow(stocks);
